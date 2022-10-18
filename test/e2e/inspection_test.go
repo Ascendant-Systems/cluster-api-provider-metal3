@@ -31,14 +31,14 @@ func inspection() {
 		}
 	}
 
-	waitForNumBmhInState(ctx, bmov1alpha1.StateInspecting, waitForNumInput{
+	WaitForNumBmhInState(ctx, bmov1alpha1.StateInspecting, WaitForNumInput{
 		Client:    bootstrapClient,
 		Options:   []client.ListOption{client.InNamespace(namespace)},
 		Replicas:  numberOfAvailableBMHs,
 		Intervals: e2eConfig.GetIntervals(specName, "wait-bmh-inspecting"),
 	})
 
-	waitForNumBmhInState(ctx, bmov1alpha1.StateAvailable, waitForNumInput{
+	WaitForNumBmhInState(ctx, bmov1alpha1.StateAvailable, WaitForNumInput{
 		Client:    bootstrapClient,
 		Options:   []client.ListOption{client.InNamespace(namespace)},
 		Replicas:  numberOfAvailableBMHs,

@@ -30,7 +30,7 @@ func liveIsoTest() {
 		bootstrapClient := bootstrapClusterProxy.GetClient()
 		listBareMetalHosts(ctx, bootstrapClient, client.InNamespace(namespace))
 
-		waitForNumBmhInState(ctx, bmov1alpha1.StateAvailable, waitForNumInput{
+		WaitForNumBmhInState(ctx, bmov1alpha1.StateAvailable, WaitForNumInput{
 			Client:    bootstrapClient,
 			Options:   []client.ListOption{client.InNamespace(namespace)},
 			Replicas:  numberOfAllBmh,
@@ -100,7 +100,7 @@ func liveIsoTest() {
 			}
 		}
 		By("Waiting for deprovisioned live ISO image booted BMH to be available")
-		waitForNumBmhInState(ctx, bmov1alpha1.StateAvailable, waitForNumInput{
+		WaitForNumBmhInState(ctx, bmov1alpha1.StateAvailable, WaitForNumInput{
 			Client:    bootstrapClient,
 			Options:   []client.ListOption{client.InNamespace(namespace)},
 			Replicas:  numberOfAllBmh,

@@ -117,7 +117,7 @@ func pivoting() {
 	Expect(controlPlane).ToNot(BeNil())
 
 	By("Check that BMHs are in provisioned state")
-	waitForNumBmhInState(ctx, bmov1alpha1.StateProvisioned, waitForNumInput{
+	WaitForNumBmhInState(ctx, bmov1alpha1.StateProvisioned, WaitForNumInput{
 		Client:    targetCluster.GetClient(),
 		Options:   []client.ListOption{client.InNamespace(namespace)},
 		Replicas:  numberOfAllBmh,
@@ -125,7 +125,7 @@ func pivoting() {
 	})
 
 	By("Check if metal3machines become ready.")
-	waitForNumMetal3MachinesReady(ctx, waitForNumInput{
+	waitForNumMetal3MachinesReady(ctx, WaitForNumInput{
 		Client:    targetCluster.GetClient(),
 		Options:   []client.ListOption{client.InNamespace(namespace)},
 		Replicas:  numberOfAllBmh,
@@ -133,7 +133,7 @@ func pivoting() {
 	})
 
 	By("Check that all machines become running.")
-	waitForNumMachinesInState(ctx, clusterv1.MachinePhaseRunning, waitForNumInput{
+	WaitForNumMachinesInState(ctx, clusterv1.MachinePhaseRunning, WaitForNumInput{
 		Client:    targetCluster.GetClient(),
 		Options:   []client.ListOption{client.InNamespace(namespace)},
 		Replicas:  numberOfAllBmh,
@@ -322,7 +322,7 @@ func rePivoting() {
 	Expect(controlPlane).ToNot(BeNil())
 
 	By("Check that BMHs are in provisioned state")
-	waitForNumBmhInState(ctx, bmov1alpha1.StateProvisioned, waitForNumInput{
+	WaitForNumBmhInState(ctx, bmov1alpha1.StateProvisioned, WaitForNumInput{
 		Client:    bootstrapClusterProxy.GetClient(),
 		Options:   []client.ListOption{client.InNamespace(namespace)},
 		Replicas:  4,
@@ -330,7 +330,7 @@ func rePivoting() {
 	})
 
 	By("Check if metal3machines become ready.")
-	waitForNumMetal3MachinesReady(ctx, waitForNumInput{
+	waitForNumMetal3MachinesReady(ctx, WaitForNumInput{
 		Client:    bootstrapClusterProxy.GetClient(),
 		Options:   []client.ListOption{client.InNamespace(namespace)},
 		Replicas:  4,
@@ -338,7 +338,7 @@ func rePivoting() {
 	})
 
 	By("Check that all machines become running.")
-	waitForNumMachinesInState(ctx, clusterv1.MachinePhaseRunning, waitForNumInput{
+	WaitForNumMachinesInState(ctx, clusterv1.MachinePhaseRunning, WaitForNumInput{
 		Client:    bootstrapClusterProxy.GetClient(),
 		Options:   []client.ListOption{client.InNamespace(namespace)},
 		Replicas:  4,

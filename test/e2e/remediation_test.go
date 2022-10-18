@@ -83,7 +83,7 @@ func remediation() {
 	By("Scaling down KCP to 1 replica")
 	newReplicaCount := 1
 	scaleKubeadmControlPlane(ctx, bootstrapClient, client.ObjectKey{Namespace: "metal3", Name: "test1"}, newReplicaCount)
-	waitForNumBmhInState(ctx, bmov1alpha1.StateAvailable, waitForNumInput{
+	WaitForNumBmhInState(ctx, bmov1alpha1.StateAvailable, WaitForNumInput{
 		Client:    bootstrapClient,
 		Options:   []client.ListOption{client.InNamespace(namespace)},
 		Replicas:  2,
@@ -115,7 +115,7 @@ func remediation() {
 		g.Expect(workerBmh.Status.Provisioning.State).To(Equal(bmov1alpha1.StateAvailable))
 	}, e2eConfig.GetIntervals(specName, "wait-machine-remediation")...).Should(Succeed())
 
-	waitForNumBmhInState(ctx, bmov1alpha1.StateProvisioned, waitForNumInput{
+	WaitForNumBmhInState(ctx, bmov1alpha1.StateProvisioned, WaitForNumInput{
 		Client:    bootstrapClient,
 		Options:   []client.ListOption{client.InNamespace(namespace)},
 		Replicas:  2,
@@ -128,7 +128,7 @@ func remediation() {
 
 	By("Scaling up machine deployment to 3 replicas")
 	scaleMachineDeployment(ctx, bootstrapClient, clusterName, namespace, 3)
-	waitForNumBmhInState(ctx, bmov1alpha1.StateProvisioning, waitForNumInput{
+	WaitForNumBmhInState(ctx, bmov1alpha1.StateProvisioning, WaitForNumInput{
 		Client:    bootstrapClient,
 		Options:   []client.ListOption{client.InNamespace(namespace)},
 		Replicas:  1,
@@ -136,7 +136,7 @@ func remediation() {
 	})
 
 	By("Waiting for one BMH to become provisioned")
-	waitForNumBmhInState(ctx, bmov1alpha1.StateProvisioned, waitForNumInput{
+	WaitForNumBmhInState(ctx, bmov1alpha1.StateProvisioned, WaitForNumInput{
 		Client:    bootstrapClient,
 		Options:   []client.ListOption{client.InNamespace(namespace)},
 		Replicas:  3,
@@ -153,7 +153,7 @@ func remediation() {
 
 	Logf("Annotating BMH as healthy and waiting for them all to be provisioned")
 	annotateBmh(ctx, bootstrapClient, workerBmh, unhealthyAnnotation, nil)
-	waitForNumBmhInState(ctx, bmov1alpha1.StateProvisioned, waitForNumInput{
+	WaitForNumBmhInState(ctx, bmov1alpha1.StateProvisioned, WaitForNumInput{
 		Client:    bootstrapClient,
 		Options:   []client.ListOption{client.InNamespace(namespace)},
 		Replicas:  numberOfAllBmh,
@@ -161,7 +161,7 @@ func remediation() {
 	})
 
 	By("Waiting for all Machines to be Running")
-	waitForNumMachinesInState(ctx, clusterv1.MachinePhaseRunning, waitForNumInput{
+	WaitForNumMachinesInState(ctx, clusterv1.MachinePhaseRunning, WaitForNumInput{
 		Client:    bootstrapClient,
 		Options:   []client.ListOption{client.InNamespace(namespace)},
 		Replicas:  numberOfAllBmh,
@@ -177,7 +177,7 @@ func remediation() {
 	By("Scaling machine deployment down to 1")
 	scaleMachineDeployment(ctx, bootstrapClient, clusterName, namespace, 1)
 	By("Waiting for 2 old workers to deprovision")
-	waitForNumBmhInState(ctx, bmov1alpha1.StateAvailable, waitForNumInput{
+	WaitForNumBmhInState(ctx, bmov1alpha1.StateAvailable, WaitForNumInput{
 		Client:    bootstrapClient,
 		Options:   []client.ListOption{client.InNamespace(namespace)},
 		Replicas:  2,
@@ -240,7 +240,7 @@ func remediation() {
 	Expect(helper.Patch(ctx, &deployment)).To(Succeed())
 
 	By("Waiting for the old worker to deprovision")
-	waitForNumBmhInState(ctx, bmov1alpha1.StateAvailable, waitForNumInput{
+	WaitForNumBmhInState(ctx, bmov1alpha1.StateAvailable, WaitForNumInput{
 		Client:    bootstrapClient,
 		Options:   []client.ListOption{client.InNamespace(namespace)},
 		Replicas:  2,
@@ -261,7 +261,7 @@ func remediation() {
 
 	By("Scaling up KCP to 3 replicas")
 	scaleKubeadmControlPlane(ctx, bootstrapClient, client.ObjectKey{Namespace: "metal3", Name: "test1"}, 3)
-	waitForNumBmhInState(ctx, bmov1alpha1.StateProvisioned, waitForNumInput{
+	WaitForNumBmhInState(ctx, bmov1alpha1.StateProvisioned, WaitForNumInput{
 		Client:    bootstrapClient,
 		Options:   []client.ListOption{client.InNamespace(namespace)},
 		Replicas:  numberOfAllBmh,
@@ -269,7 +269,7 @@ func remediation() {
 	})
 
 	Byf("Waiting for all %d machines to be Running", numberOfAllBmh)
-	waitForNumMachinesInState(ctx, clusterv1.MachinePhaseRunning, waitForNumInput{
+	WaitForNumMachinesInState(ctx, clusterv1.MachinePhaseRunning, WaitForNumInput{
 		Client:    bootstrapClient,
 		Options:   []client.ListOption{client.InNamespace(namespace)},
 		Replicas:  numberOfAllBmh,

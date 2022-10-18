@@ -173,7 +173,7 @@ func loadE2EConfig(configPath string) *clusterctl.E2EConfig {
 	return config
 }
 
-func createClusterctlLocalRepository(config *clusterctl.E2EConfig, repositoryFolder string) string {
+func CreateClusterctlLocalRepository(config *clusterctl.E2EConfig, repositoryFolder string) string {
 	createRepositoryInput := clusterctl.CreateRepositoryInput{
 		E2EConfig:        config,
 		RepositoryFolder: repositoryFolder,
@@ -196,7 +196,7 @@ func createClusterctlLocalRepository(config *clusterctl.E2EConfig, repositoryFol
 	return clusterctlConfig
 }
 
-func setupBootstrapCluster(config *clusterctl.E2EConfig, scheme *runtime.Scheme, useExistingCluster bool) (bootstrap.ClusterProvider, framework.ClusterProxy) {
+func SetupBootstrapCluster(config *clusterctl.E2EConfig, scheme *runtime.Scheme, useExistingCluster bool) (bootstrap.ClusterProvider, framework.ClusterProxy) {
 	var clusterProvider bootstrap.ClusterProvider
 	if !useExistingCluster {
 		clusterProvider = bootstrap.CreateKindBootstrapClusterAndLoadImages(context.TODO(), bootstrap.CreateKindBootstrapClusterAndLoadImagesInput{
@@ -217,7 +217,7 @@ func setupBootstrapCluster(config *clusterctl.E2EConfig, scheme *runtime.Scheme,
 	return clusterProvider, clusterProxy
 }
 
-func initBootstrapCluster(bootstrapClusterProxy framework.ClusterProxy, config *clusterctl.E2EConfig, clusterctlConfig, artifactFolder string) {
+func InitBootstrapCluster(bootstrapClusterProxy framework.ClusterProxy, config *clusterctl.E2EConfig, clusterctlConfig, artifactFolder string) {
 	clusterctl.InitManagementClusterAndWatchControllerLogs(context.TODO(), clusterctl.InitManagementClusterAndWatchControllerLogsInput{
 		ClusterProxy:            bootstrapClusterProxy,
 		ClusterctlConfigPath:    clusterctlConfig,
@@ -226,7 +226,7 @@ func initBootstrapCluster(bootstrapClusterProxy framework.ClusterProxy, config *
 	}, config.GetIntervals(bootstrapClusterProxy.GetName(), "wait-controllers")...)
 }
 
-func tearDown(bootstrapClusterProvider bootstrap.ClusterProvider, bootstrapClusterProxy framework.ClusterProxy) {
+func TearDown(bootstrapClusterProvider bootstrap.ClusterProvider, bootstrapClusterProxy framework.ClusterProxy) {
 	if bootstrapClusterProxy != nil {
 		bootstrapClusterProxy.Dispose(context.TODO())
 	}
