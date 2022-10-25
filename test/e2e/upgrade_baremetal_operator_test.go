@@ -42,7 +42,7 @@ func upgradeBMO(clientSet *kubernetes.Clientset) {
 
 	By("Waiting for BMO update to rollout")
 	Eventually(func() bool {
-		return deploymentRolledOut(ctx, clientSet, bmoDeployName, bmoNamespace, deploy.Status.ObservedGeneration+1)
+		return DeploymentRolledOut(ctx, clientSet, bmoDeployName, bmoNamespace, deploy.Status.ObservedGeneration+1)
 	},
 		e2eConfig.GetIntervals(specName, "wait-deployment")...,
 	).Should(Equal(true))

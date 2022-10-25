@@ -64,7 +64,7 @@ func DumpSpecResourcesAndCleanup(ctx context.Context, specName string, clusterPr
 	}
 }
 
-// downloadFile will download a url and store it in local filepath.
+// DownloadFile will download a url and store it in local filepath.
 func DownloadFile(filePath string, url string) error {
 	// Get the data
 	resp, err := http.Get(url)
@@ -88,7 +88,7 @@ func DownloadFile(filePath string, url string) error {
 	return err
 }
 
-// filterBmhsByProvisioningState returns a filtered list of BaremetalHost objects in certain provisioning state.
+// FilterBmhsByProvisioningState returns a filtered list of BaremetalHost objects in certain provisioning state.
 func FilterBmhsByProvisioningState(bmhs []bmov1alpha1.BareMetalHost, state bmov1alpha1.ProvisioningState) (result []bmov1alpha1.BareMetalHost) {
 	for _, bmh := range bmhs {
 		if bmh.Status.Provisioning.State == state {
@@ -98,7 +98,7 @@ func FilterBmhsByProvisioningState(bmhs []bmov1alpha1.BareMetalHost, state bmov1
 	return
 }
 
-// filterMachinesByPhase returns a filtered list of CAPI machine objects in certain desired phase.
+// FilterMachinesByPhase returns a filtered list of CAPI machine objects in certain desired phase.
 func FilterMachinesByPhase(machines []clusterv1.Machine, phase clusterv1.MachinePhase) (result []clusterv1.Machine) {
 	accept := func(machine clusterv1.Machine) bool {
 		return machine.Status.GetTypedPhase() == phase
@@ -106,7 +106,7 @@ func FilterMachinesByPhase(machines []clusterv1.Machine, phase clusterv1.Machine
 	return FilterMachines(machines, accept)
 }
 
-// filterMachines returns a filtered list of Machines that were accepted by the accept function.
+// FilterMachines returns a filtered list of Machines that were accepted by the accept function.
 func FilterMachines(machines []clusterv1.Machine, accept func(clusterv1.Machine) bool) (result []clusterv1.Machine) {
 	for _, machine := range machines {
 		if accept(machine) {
@@ -116,7 +116,7 @@ func FilterMachines(machines []clusterv1.Machine, accept func(clusterv1.Machine)
 	return
 }
 
-// annotateBmh annotates BaremetalHost with a given key and value.
+// AnnotateBmh annotates BaremetalHost with a given key and value.
 func AnnotateBmh(ctx context.Context, client client.Client, host bmov1alpha1.BareMetalHost, key string, value *string) {
 	helper, err := patch.NewHelper(&host, client)
 	Expect(err).NotTo(HaveOccurred())
@@ -133,7 +133,7 @@ func AnnotateBmh(ctx context.Context, client client.Client, host bmov1alpha1.Bar
 	Expect(helper.Patch(ctx, &host)).To(Succeed())
 }
 
-// deleteNodeReuseLabelFromHost deletes nodeReuseLabelName from the host if it exists.
+// DeleteNodeReuseLabelFromHost deletes nodeReuseLabelName from the host if it exists.
 func DeleteNodeReuseLabelFromHost(ctx context.Context, client client.Client, host bmov1alpha1.BareMetalHost, nodeReuseLabelName string) {
 	helper, err := patch.NewHelper(&host, client)
 	Expect(err).NotTo(HaveOccurred())
@@ -146,7 +146,7 @@ func DeleteNodeReuseLabelFromHost(ctx context.Context, client client.Client, hos
 	Expect(helper.Patch(ctx, &host)).To(Succeed())
 }
 
-// scaleMachineDeployment scales up/down MachineDeployment object to desired replicas.
+// ScaleMachineDeployment scales up/down MachineDeployment object to desired replicas.
 func ScaleMachineDeployment(ctx context.Context, clusterClient client.Client, clusterName, namespace string, newReplicas int) {
 	machineDeployments := framework.GetMachineDeploymentsByCluster(ctx, framework.GetMachineDeploymentsByClusterInput{
 		Lister:      clusterClient,
@@ -160,7 +160,7 @@ func ScaleMachineDeployment(ctx context.Context, clusterClient client.Client, cl
 	Expect(err).To(BeNil(), "Failed to patch workers MachineDeployment")
 }
 
-// scaleKubeadmControlPlane scales up/down KubeadmControlPlane object to desired replicas.
+// ScaleKubeadmControlPlane scales up/down KubeadmControlPlane object to desired replicas.
 func ScaleKubeadmControlPlane(ctx context.Context, c client.Client, name client.ObjectKey, newReplicaCount int) {
 	ctrlplane := controlplanev1.KubeadmControlPlane{}
 	Expect(c.Get(ctx, name, &ctrlplane)).To(Succeed())
@@ -193,7 +193,7 @@ func GetAllBmhs(ctx context.Context, c client.Client, namespace string) ([]bmov1
 	return bmhs.Items, err
 }
 
-// filterNodeCondition will filter the slice of NodeConditions so that only the given conditionType remains
+// FilterNodeCondition will filter the slice of NodeConditions so that only the given conditionType remains
 // and return the resulting slice.
 func FilterNodeCondition(conditions []corev1.NodeCondition, conditionType corev1.NodeConditionType) []corev1.NodeCondition {
 	filtered := []corev1.NodeCondition{}
@@ -205,7 +205,7 @@ func FilterNodeCondition(conditions []corev1.NodeCondition, conditionType corev1
 	return filtered
 }
 
-// listBareMetalHosts logs the names, provisioning status, consumer and power status
+// ListBareMetalHosts logs the names, provisioning status, consumer and power status
 // of all BareMetalHosts matching the opts. Similar to kubectl get baremetalhosts.
 func ListBareMetalHosts(ctx context.Context, c client.Client, opts ...client.ListOption) {
 	bmhs := bmov1alpha1.BareMetalHostList{}
@@ -225,7 +225,7 @@ func ListBareMetalHosts(ctx context.Context, c client.Client, opts ...client.Lis
 	Logf("=================================================================================")
 }
 
-// listMetal3Machines logs the names, ready status and provider ID of all Metal3Machines in the namespace.
+// ListMetal3Machines logs the names, ready status and provider ID of all Metal3Machines in the namespace.
 // Similar to kubectl get metal3machines.
 func ListMetal3Machines(ctx context.Context, c client.Client, opts ...client.ListOption) {
 	metal3Machines := infrav1.Metal3MachineList{}
@@ -245,7 +245,7 @@ func ListMetal3Machines(ctx context.Context, c client.Client, opts ...client.Lis
 	Logf("=================================================================================")
 }
 
-// listMachines logs the names, status phase, provider ID and Kubernetes version
+// ListMachines logs the names, status phase, provider ID and Kubernetes version
 // of all Machines in the namespace. Similar to kubectl get machines.
 func ListMachines(ctx context.Context, c client.Client, opts ...client.ListOption) {
 	machines := clusterv1.MachineList{}
@@ -265,7 +265,7 @@ func ListMachines(ctx context.Context, c client.Client, opts ...client.ListOptio
 	Logf("=================================================================================")
 }
 
-// listNodes logs the names, status and Kubernetes version of all Nodes.
+// ListNodes logs the names, status and Kubernetes version of all Nodes.
 // Similar to kubectl get nodes.
 func ListNodes(ctx context.Context, c client.Client) {
 	nodes := corev1.NodeList{}
@@ -307,7 +307,7 @@ func WaitForNumBmhInState(ctx context.Context, state bmov1alpha1.ProvisioningSta
 	ListBareMetalHosts(ctx, input.Client, input.Options...)
 }
 
-// waitForNumMetal3MachinesReady will wait for the given number of M3Ms to be ready.
+// WaitForNumMetal3MachinesReady will wait for the given number of M3Ms to be ready.
 func WaitForNumMetal3MachinesReady(ctx context.Context, input WaitForNumInput) {
 	Logf("Waiting for %d Metal3Machines to be ready", input.Replicas)
 	Eventually(func(g Gomega) {
@@ -334,7 +334,7 @@ func WaitForNumMachinesInState(ctx context.Context, phase clusterv1.MachinePhase
 	ListMachines(ctx, input.Client, input.Options...)
 }
 
-// waitForNumMachines will wait for the given number of Machines to be accepted by the accept function.
+// WaitForNumMachines will wait for the given number of Machines to be accepted by the accept function.
 // This is a more generic function than WaitForNumMachinesInState. It can be used to wait for any condition,
 // e.g. that the Kubernetes version is correct.
 func WaitForNumMachines(ctx context.Context, accept func(clusterv1.Machine) bool, input WaitForNumInput) {
@@ -368,7 +368,7 @@ func GetMetal3Machines(ctx context.Context, c client.Client, cluster, namespace 
 	return controlplane, workers
 }
 
-// metal3MachineToMachineName finds the relevant owner reference in Metal3Machine
+// Metal3MachineToMachineName finds the relevant owner reference in Metal3Machine
 // and returns the name of corresponding Machine.
 func Metal3MachineToMachineName(m3machine infrav1.Metal3Machine) (string, error) {
 	ownerReferences := m3machine.GetOwnerReferences()
@@ -385,6 +385,6 @@ func Metal3MachineToBmhName(m3machine infrav1.Metal3Machine) string {
 }
 
 // Derives the name of a VM created by metal3-dev-env from the name of a BareMetalHost object.
-func bmhToVMName(host bmov1alpha1.BareMetalHost) string {
+func BmhToVMName(host bmov1alpha1.BareMetalHost) string {
 	return strings.ReplaceAll(host.Name, "-", "_")
 }

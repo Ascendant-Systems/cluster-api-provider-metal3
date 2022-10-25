@@ -28,10 +28,10 @@ const bmoPath = "BMOPATH"
 
 func pivoting() {
 	Logf("Starting pivoting tests")
-	listBareMetalHosts(ctx, bootstrapClusterProxy.GetClient(), client.InNamespace(namespace))
-	listMetal3Machines(ctx, bootstrapClusterProxy.GetClient(), client.InNamespace(namespace))
-	listMachines(ctx, bootstrapClusterProxy.GetClient(), client.InNamespace(namespace))
-	listNodes(ctx, targetCluster.GetClient())
+	ListBareMetalHosts(ctx, bootstrapClusterProxy.GetClient(), client.InNamespace(namespace))
+	ListMetal3Machines(ctx, bootstrapClusterProxy.GetClient(), client.InNamespace(namespace))
+	ListMachines(ctx, bootstrapClusterProxy.GetClient(), client.InNamespace(namespace))
+	ListNodes(ctx, targetCluster.GetClient())
 
 	By("Remove Ironic containers from the source cluster")
 	ephemeralCluster := os.Getenv("EPHEMERAL_CLUSTER")
@@ -125,7 +125,7 @@ func pivoting() {
 	})
 
 	By("Check if metal3machines become ready.")
-	waitForNumMetal3MachinesReady(ctx, WaitForNumInput{
+	WaitForNumMetal3MachinesReady(ctx, WaitForNumInput{
 		Client:    targetCluster.GetClient(),
 		Options:   []client.ListOption{client.InNamespace(namespace)},
 		Replicas:  numberOfAllBmh,
@@ -330,7 +330,7 @@ func rePivoting() {
 	})
 
 	By("Check if metal3machines become ready.")
-	waitForNumMetal3MachinesReady(ctx, WaitForNumInput{
+	WaitForNumMetal3MachinesReady(ctx, WaitForNumInput{
 		Client:    bootstrapClusterProxy.GetClient(),
 		Options:   []client.ListOption{client.InNamespace(namespace)},
 		Replicas:  4,

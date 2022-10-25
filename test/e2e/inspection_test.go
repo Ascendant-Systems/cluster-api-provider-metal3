@@ -27,7 +27,7 @@ func inspection() {
 	Logf("Request inspection for all Available BMHs via API")
 	for _, bmh := range availableBMHList.Items {
 		if bmh.Status.Provisioning.State == bmov1alpha1.StateAvailable {
-			annotateBmh(ctx, bootstrapClient, bmh, inspectAnnotation, pointer.String(""))
+			AnnotateBmh(ctx, bootstrapClient, bmh, inspectAnnotation, pointer.String(""))
 		}
 	}
 

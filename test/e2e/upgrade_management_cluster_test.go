@@ -105,7 +105,7 @@ func preWaitForCluster(clusterProxy framework.ClusterProxy, clusterNamespace str
 func preInitFunc(clusterProxy framework.ClusterProxy) {
 	installCertManager := func(clusterProxy framework.ClusterProxy) {
 		certManagerLink := fmt.Sprintf("https://github.com/cert-manager/cert-manager/releases/download/%s/cert-manager.yaml", e2eConfig.GetVariable("CERT_MANAGER_RELEASE"))
-		err := downloadFile("/tmp/certManager.yaml", certManagerLink)
+		err := DownloadFile("/tmp/certManager.yaml", certManagerLink)
 		Expect(err).To(BeNil(), "Unable to download certmanager manifest")
 		certManagerYaml, err := os.ReadFile("/tmp/certManager.yaml")
 		Expect(err).ShouldNot(HaveOccurred())

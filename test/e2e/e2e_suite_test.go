@@ -254,7 +254,7 @@ func validateGlobals(specName string) {
 
 func updateCalico(config *clusterctl.E2EConfig, calicoYaml, calicoInterface string) {
 	calicoManifestURL := fmt.Sprintf("https://raw.githubusercontent.com/projectcalico/calico/%s/manifests/calico.yaml", config.GetVariable("CALICO_PATCH_RELEASE"))
-	err := downloadFile(calicoYaml, calicoManifestURL)
+	err := DownloadFile(calicoYaml, calicoManifestURL)
 	Expect(err).To(BeNil(), "Unable to download Calico manifest")
 	cniYaml, err := os.ReadFile(calicoYaml)
 	Expect(err).To(BeNil(), "Unable to read Calico manifest")

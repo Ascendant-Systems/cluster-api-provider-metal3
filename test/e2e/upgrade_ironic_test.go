@@ -48,7 +48,7 @@ func upgradeIronic(clientSet *kubernetes.Clientset) {
 
 	By("Waiting for ironic update to rollout")
 	Eventually(func() bool {
-		return deploymentRolledOut(ctx, clientSet, ironicDeployName, ironicNamespace, deploy.Status.ObservedGeneration+1)
+		return DeploymentRolledOut(ctx, clientSet, ironicDeployName, ironicNamespace, deploy.Status.ObservedGeneration+1)
 	},
 		e2eConfig.GetIntervals(specName, "wait-deployment")...,
 	).Should(Equal(true))
